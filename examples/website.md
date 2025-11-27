@@ -11,7 +11,7 @@ This guide helps diagnose why a **website isn’t loading**, a **service is unre
 ```bash
 ip a
 
-🔎 Check the default gateway
+### 🔎 Check the default gateway
 ip route
 
 🔎 Ping the gateway
