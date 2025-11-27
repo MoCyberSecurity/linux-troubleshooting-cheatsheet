@@ -32,6 +32,10 @@ A beginner-friendly guide to Linux commands for troubleshooting systems, network
 5. Check files and permissions: `ls -l /path`
 6. Check disk usage: `df -h`, `lsblk`
 
+
 ## Examples
 
-See practical troubleshooting examples in the [examples folder](examples/).
+- [Website Not Loading](examples/website.md)
+- [Service Not Starting](examples/service.md)
+- [Disk Full / Filesystem Issue](examples/disk.md)
+
