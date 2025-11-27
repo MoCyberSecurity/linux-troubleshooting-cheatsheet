@@ -8,105 +8,130 @@ This guide helps diagnose why a **website isn’t loading**, a **service is unre
 # 🚀 1. Check Basic Connectivity
 
 ### 🔎 Does the system have an IP?
-```bash
-ip a
+*`ip a`*
 
-🔎 Check the default gateway
-ip route
+### 🔎 Check the default gateway
+*`ip route`*
 
-🔎 Ping the gateway
-ping -c 4 <gateway_IP>
+### 🔎 Ping the gateway
+*`ping -c 4 <gateway_IP>`*
 
-🔎 Ping the internet (Google DNS)
-ping -c 4 8.8.8.8
+### 🔎 Ping the internet (Google DNS)
+*`ping -c 4 8.8.8.8`*
 
+> ✅ If 8.8.8.8 works but websites don’t → **DNS problem**
 
-✅ If 8.8.8.8 works but websites don’t → DNS problem
+---
 
 # 🧭 2. DNS Troubleshooting
-🔍 Resolve a domain name
-dig google.com
 
-🔍 Alternative DNS lookup
-nslookup google.com
+### 🔍 Resolve a domain name
+*`dig google.com`*
 
-🔍 Check DNS configuration
-cat /etc/resolv.conf
+### 🔍 Alternative DNS lookup
+*`nslookup google.com`*
 
+### 🔍 Check DNS configuration
+*`cat /etc/resolv.conf`*
 
-⚠️ Incorrect or empty /etc/resolv.conf = broken DNS configuration
+> ⚠️ Incorrect or empty `/etc/resolv.conf` = **broken DNS**
 
-🌍 3. Check Remote Server Reachability
-🔌 Test if a remote port is open
-nc -zv <IP> <port>
+---
 
-🔌 Check local listening services
-ss -tulnp
+# 🌍 3. Check Remote Server Reachability
 
-🔌 Check web server headers
-curl -I http://<domain>
+### 🔌 Test if a remote port is open
+*`nc -zv <IP> <port>`*
 
+### 🔌 Check local listening services
+*`ss -tulnp`*
 
-Example problems: 301, 403, 404, SSL errors
+### 🔌 Check HTTP/HTTPS response headers
+*`curl -I http://<domain>`*
 
-🛰️ 4. Trace the Path (Find Where It Breaks)
-🧭 Trace route to the destination
-traceroute <domain>
+> Helps detect **redirects, SSL issues, server errors**
 
-🧭 Alternative (TCP-based)
-tcptraceroute <domain> 443
+---
 
+# 🛰️ 4. Trace the Path (Find Where It Breaks)
 
-Helps identify where the connection fails (ISP, network hop, target server)
+### 🧭 Standard traceroute
+*`traceroute <domain>`*
 
-🔥 5. Firewall Checks
-UFW (Ubuntu/Debian)
-sudo ufw status
+### 🧭 TCP-based traceroute
+*`tcptraceroute <domain> 443`*
 
-Firewalld
-sudo firewall-cmd --list-all
+> Reveals **where** the connection fails (ISP, firewall, server)
 
-Raw iptables rules
-sudo iptables -L -n -v
+---
 
+# 🔥 5. Firewall Checks
 
-❗ Common issue: inbound/outbound traffic blocked
+### UFW (Ubuntu/Debian)
+*`sudo ufw status`*
 
-📜 6. Log Analysis
-System logs
-journalctl -xe
+### Firewalld (RHEL/CentOS)
+*`sudo firewall-cmd --list-all`*
 
-Network-related kernel messages
-dmesg | grep -i network
+### Raw iptables rules
+*`sudo iptables -L -n -v`*
 
-Web server logs (example: nginx)
-sudo tail -f /var/log/nginx/error.log
+> ❗ Common issue: blocked outbound HTTP/HTTPS
 
+---
 
-Useful for SSL failures, timeouts, DNS errors, blocked packets
+# 📜 6. Log Analysis
 
-🧩 7. Network Interface Health
-NIC status
-ip link show
+### System logs
+*`journalctl -xe`*
 
-Hardware link activity
-ethtool eth0
+### Kernel logs (network-related)
+*`dmesg | grep -i network`*
 
-Check interface throughput
-sar -n DEV 1
+### Web server logs (example: nginx)
+*`sudo tail -f /var/log/nginx/error.log`*
 
+> Useful for **DNS failures, SSL issues, timeouts**
 
-Detects down interfaces, duplex mismatch, cable issues
+---
 
-🛰️ 8. Packet Capture (Advanced)
-Capture traffic for port 80 (HTTP)
-sudo tcpdump -i eth0 port 80
+# 🧩 7. Network Interface Health
 
-Capture traffic to specific host
-sudo tcpdump -i eth0 host <IP>
+### View interface status
+*`ip link show`*
 
-Write capture to file for Wireshark
-sudo tcpdump -i eth0 -w capture.pcap
+### Check hardware link state
+*`ethtool eth0`*
 
+### Check network usage
+*`sar -n DEV 1`*
 
-Ideal for deep debugging: dropped packets, resets, DNS failures, TLS errors
+> Helps diagnose **down interfaces, duplex mismatch, cable faults**
+
+---
+
+# 🛰️ 8. Packet Capture (Advanced)
+
+### Capture HTTP traffic
+*`sudo tcpdump -i eth0 port 80`*
+
+### Capture traffic to/from specific host
+*`sudo tcpdump -i eth0 host <IP>`*
+
+### Save capture for Wireshark
+*`sudo tcpdump -i eth0 -w capture.pcap`*
+
+> Essential for deep analysis of **TLS errors, resets, dropped packets**
+
+---
+
+# ✔️ Summary of Issues You Can Diagnose
+
+- DNS issues  
+- Firewall blocks  
+- Routing problems  
+- Remote service down  
+- SSL errors  
+- Network hop failures  
+- Packet drops  
+- NIC/cable problems  
