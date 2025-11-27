@@ -31,3 +31,7 @@ A beginner-friendly guide to Linux commands for troubleshooting systems, network
 4. Inspect logs: `grep -R "error" /var/log/`
 5. Check files and permissions: `ls -l /path`
 6. Check disk usage: `df -h`, `lsblk`
+
+## Examples
+
+See practical troubleshooting examples in the [examples folder](examples/).
