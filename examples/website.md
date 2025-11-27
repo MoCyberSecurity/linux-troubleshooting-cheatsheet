@@ -11,7 +11,7 @@ This guide helps diagnose why a **website isn’t loading**, a **service is unre
 ```bash
 ip a
 
-### 🔎 Check the default gateway
+🔎 Check the default gateway
 ip route
 
 🔎 Ping the gateway
@@ -23,7 +23,7 @@ ping -c 4 8.8.8.8
 
 ✅ If 8.8.8.8 works but websites don’t → DNS problem
 
-🧭 2. DNS Troubleshooting
+# 🧭 2. DNS Troubleshooting
 🔍 Resolve a domain name
 dig google.com
 
